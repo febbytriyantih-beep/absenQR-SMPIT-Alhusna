@@ -2956,36 +2956,142 @@ function onScanError(
 
 function showScanResult(data){
     const resultBox = document.getElementById('scanResult');
-    if(!data){ resultBox.innerHTML='<div class="scan-error">Server tidak memberikan respons.</div>'; return; }
-    if(!data.success){ resultBox.innerHTML='<div class="scan-error">❌ '+escapeHtml(data.message || 'Absensi gagal.')+'</div>'; return; }
 
-    let title = data.mode === 'PULANG' ? 'Absensi Berhasil (PULANG)' :
-                data.mode === 'MASUK' ? 'Absensi Berhasil (MASUK)' :
-                data.type === 'GURU' ? 'Absensi Guru Berhasil' : 'Absensi Berhasil';
-    const late = String(data.status || '').toUpperCase() === 'TERLAMBAT';
-    const statusClass = late ? 'scan-warning' : 'scan-success';
+    if(!data){
+        resultBox.innerHTML =
+            '<div class="scan-error">Server tidak memberikan respons.</div>';
+        return;
+    }
 
-    let html = `<div class="${statusClass}" style="font-size:18px;margin-bottom:15px">✓ ${escapeHtml(title)}</div>
-                <div class="scan-name">${escapeHtml(data.nama || '-')}</div>`;
-    if(data.nis) html += `<div class="scan-detail">NIS: <strong>${escapeHtml(data.nis)}</strong></div>`;
-    if(data.nip) html += `<div class="scan-detail">NIP: <strong>${escapeHtml(data.nip)}</strong></div>`;
-    if(data.kelas) html += `<div class="scan-detail">Kelas: <strong>${escapeHtml(data.kelas)}</strong></div>`;
+    if(!data.success){
+        resultBox.innerHTML =
+            '<div class="scan-error">❌ ' +
+            escapeHtml(data.message || 'Absensi gagal.') +
+            '</div>';
+        return;
+    }
+
+    const mode = String(data.mode || '').toUpperCase();
+
+    let title = 'Absensi Berhasil';
+    if(mode === 'MASUK') title = 'ABSENSI BERHASIL — MASUK';
+    if(mode === 'PULANG') title = 'ABSENSI BERHASIL — PULANG';
+    if(mode === 'SELESAI') title = 'ABSENSI SUDAH LENGKAP';
+    if(data.type === 'GURU') title = 'ABSENSI GURU BERHASIL';
+
+    const late =
+        String(data.statusMasuk || data.status || '').toUpperCase() === 'TERLAMBAT';
+
+    const statusClass =
+        late && mode === 'MASUK'
+            ? 'scan-warning'
+            : 'scan-success';
+
+    let html =
+        `<div class="${statusClass}" style="font-size:18px;margin-bottom:15px">
+            ✓ ${escapeHtml(title)}
+        </div>
+        <div class="scan-name">${escapeHtml(data.nama || '-')}</div>`;
+
+    if(data.nis)
+        html += `<div class="scan-detail">NIS: <strong>${escapeHtml(data.nis)}</strong></div>`;
+
+    if(data.nip)
+        html += `<div class="scan-detail">NIP: <strong>${escapeHtml(data.nip)}</strong></div>`;
+
+    if(data.kelas)
+        html += `<div class="scan-detail">Kelas: <strong>${escapeHtml(data.kelas)}</strong></div>`;
 
     html += `<hr style="border:0;border-top:1px solid #e5e7eb;margin:15px 0">`;
 
-    if(data.mode === 'PULANG' || data.jamPulang){
-        html += `<div class="scan-detail">🕐 Jam Pulang: <strong>${escapeHtml(data.jamPulang || data.jam || '-')}</strong><br>📝 Keterangan Pulang: <strong>${escapeHtml(data.keteranganPulang || 'Absensi pulang')}</strong></div>`;
-        if(data.jamMasuk) html += `<div class="scan-detail" style="margin-top:8px">🕐 Jam Masuk: <strong>${escapeHtml(data.jamMasuk)}</strong><br>📝 Keterangan Masuk: <strong>${escapeHtml(data.keteranganMasuk || '-')}</strong></div>`;
-    } else {
-        html += `<div class="scan-detail">🕐 Jam Masuk: <strong>${escapeHtml(data.jamMasuk || data.jam || '-')}</strong><br>📝 Keterangan Masuk: <strong>${escapeHtml(data.keteranganMasuk || (late ? 'Masuk setelah 07:00' : 'Masuk tepat waktu'))}</strong></div>`;
+    // ==================================================
+    // GURU
+    // ==================================================
+    if(data.type === 'GURU'){
+        html += `
+            <div class="scan-detail">
+                🟢 <strong>ABSENSI GURU</strong><br><br>
+                🕐 Jam: <strong>${escapeHtml(data.jam || '-')}</strong><br>
+                📝 Keterangan: <strong>Absensi Guru</strong>
+            </div>`;
     }
 
-    html += `<div class="scan-detail" style="margin-top:8px">📅 Tanggal: <strong>${escapeHtml(formatDate(data.tanggal || ''))}</strong></div>`;
-    if(data.status) html += `<div style="margin-top:12px"><span class="badge ${late ? 'badge-late' : 'badge-ok'}">${escapeHtml(data.status)}</span></div>`;
-    html += `<div style="margin-top:14px;color:#667085;font-size:13px">${escapeHtml(data.message || '')}</div>`;
+    // ==================================================
+    // SISWA MASUK
+    // ==================================================
+    else if(mode === 'MASUK'){
+        html += `
+            <div class="scan-detail">
+                🟢 <strong>ABSENSI MASUK</strong><br><br>
+                🕐 Jam Masuk:
+                <strong>${escapeHtml(data.jamMasuk || data.jam || '-')}</strong><br>
+                📝 Keterangan Masuk:
+                <strong>${escapeHtml(data.keteranganMasuk || '-')}</strong>
+            </div>`;
+    }
+
+    // ==================================================
+    // SISWA PULANG
+    // ==================================================
+    else if(mode === 'PULANG'){
+        html += `
+            <div class="scan-detail">
+                🔵 <strong>ABSENSI PULANG</strong><br><br>
+                🕐 Jam Pulang:
+                <strong>${escapeHtml(data.jamPulang || data.jam || '-')}</strong><br>
+                📝 Keterangan Pulang:
+                <strong>${escapeHtml(data.keteranganPulang || 'PULANG')}</strong>
+            </div>`;
+
+        html += `
+            <div class="scan-detail" style="margin-top:10px">
+                🟢 Jam Masuk:
+                <strong>${escapeHtml(data.jamMasuk || '-')}</strong><br>
+                📝 Keterangan Masuk:
+                <strong>${escapeHtml(data.keteranganMasuk || '-')}</strong>
+            </div>`;
+    }
+
+    // ==================================================
+    // SUDAH LENGKAP
+    // ==================================================
+    else if(mode === 'SELESAI'){
+        html += `
+            <div class="scan-detail">
+                ⚠️ <strong>ABSENSI SUDAH LENGKAP</strong><br><br>
+                🟢 Jam Masuk:
+                <strong>${escapeHtml(data.jamMasuk || '-')}</strong><br>
+                📝 Keterangan Masuk:
+                <strong>${escapeHtml(data.keteranganMasuk || '-')}</strong><br><br>
+                🔵 Jam Pulang:
+                <strong>${escapeHtml(data.jamPulang || '-')}</strong><br>
+                📝 Keterangan Pulang:
+                <strong>${escapeHtml(data.keteranganPulang || 'PULANG')}</strong>
+            </div>`;
+    }
+
+    html += `
+        <div class="scan-detail" style="margin-top:8px">
+            📅 Tanggal:
+            <strong>${escapeHtml(formatDate(data.tanggal || ''))}</strong>
+        </div>`;
+
+    if(data.status){
+        html += `
+            <div style="margin-top:12px">
+                <span class="badge ${late && mode === 'MASUK' ? 'badge-late' : 'badge-ok'}">
+                    ${escapeHtml(data.status)}
+                </span>
+            </div>`;
+    }
+
+    html += `
+        <div style="margin-top:14px;color:#667085;font-size:13px">
+            ${escapeHtml(data.message || '')}
+        </div>`;
+
     resultBox.innerHTML = html;
 }
-
 
 /* =====================================================
    LOAD STUDENTS
