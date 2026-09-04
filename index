@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>
+Absensi Digital SMPIT Al-Husna
+</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+*{
+ box-sizing:border-box;
+}
+
+body{
+ margin:0;
+ font-family:Arial,Helvetica,sans-serif;
+ background:#f3f6fb;
+ color:#172033;
+}
+
+header{
+ background:linear-gradient(135deg,#0757a0,#0877c9);
+ color:white;
+ padding:18px;
+ box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+
+.header-inner{
+ max-width:1200px;
+ margin:auto;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.logo{
+ width:58px;
+ height:58px;
+ border-radius:50%;
+ background:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:bold;
+ color:#0757a0;
+ border:3px solid #ffd43b;
+ overflow:hidden;
+}
+
+.logo img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.brand h1{
+ font-size:20px;
+ margin:0;
+}
+
+.brand p{
+ margin:4px 0 0;
+ opacity:.9;
+ font-size:13px;
+}
+
+.clock{
+ text-align:right;
+}
+
+#clock{
+ font-size:20px;
+ font-weight:bold;
+}
+
+#date{
+ font-size:12px;
+ opacity:.9;
+}
+
+.container{
+ max-width:1200px;
+ margin:20px auto;
+ padding:0 15px;
+}
+
+.card{
+ background:white;
+ border-radius:16px;
+ padding:20px;
+ margin-bottom:18px;
+ box-shadow:0 5px 18px rgba(0,0,0,.07);
+}
+
+.login{
+ max-width:430px;
+ margin:60px auto;
+}
+
+.login h2{
+ margin-top:0;
+ text-align:center;
+}
+
+input,select{
+ width:100%;
+ padding:12px 14px;
+ border:1px solid #d5dce7;
+ border-radius:10px;
+ margin:7px 0 12px;
+ font-size:14px;
+}
+
+button{
+ border:0;
+ border-radius:10px;
+ padding:12px 18px;
+ cursor:pointer;
+ font-weight:bold;
+ background:#0877c9;
+ color:white;
+}
+
+button:hover{
+ opacity:.9;
+}
+
+.btn-yellow{
+ background:#f5b800;
+ color:#172033;
+}
+
+.btn-red{
+ background:#dc3545;
+}
+
+.btn-green{
+ background:#159447;
+}
+
+.btn-gray{
+ background:#667085;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:
+ repeat(auto-fit,minmax(180px,1fr));
+ gap:15px;
+}
+
+.stat{
+ padding:18px;
+ border-radius:14px;
+ background:#f7f9fc;
+ border-left:5px solid #0877c9;
+}
+
+.stat h3{
+ margin:0;
+ font-size:13px;
+ color:#667085;
+}
+
+.stat strong{
+ display:block;
+ font-size:30px;
+ margin-top:7px;
+}
+
+.menu{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ margin-bottom:18px;
+}
+
+.menu button{
+ flex:1;
+ min-width:130px;
+}
+
+.section{
+ display:none;
+}
+
+.section.active{
+ display:block;
+}
+
+.scanner{
+ max-width:520px;
+ margin:auto;
+}
+
+#reader{
+ width:100%;
+ border-radius:14px;
+ overflow:hidden;
+}
+
+.scan-result{
+ margin-top:15px;
+ padding:18px;
+ border-radius:14px;
+ background:#f4f8ff;
+ text-align:center;
+}
+
+.scan-name{
+ font-size:23px;
+ font-weight:bold;
+}
+
+.success{
+ color:#16843a;
+}
+
+.warning{
+ color:#d98200;
+}
+
+.error{
+ color:#c62828;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+}
+
+th,td{
+ padding:10px;
+ border-bottom:1px solid #e5e7eb;
+ text-align:left;
+ font-size:13px;
+}
+
+th{
+ background:#f4f6f8;
+}
+
+.table-wrap{
+ overflow:auto;
+}
+
+.hidden{
+ display:none!important;
+}
+
+.badge{
+ display:inline-block;
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:11px;
+ font-weight:bold;
+ background:#eef2f7;
+}
+
+.badge.late{
+ background:#fff0d5;
+ color:#a86200;
+}
+
+.badge.ok{
+ background:#ddf8e6;
+ color:#137333;
+}
+
+.badge.pulang{
+ background:#e3efff;
+ color:#0757a0;
+}
+
+.qr-card{
+ display:inline-block;
+ width:220px;
+ padding:15px;
+ margin:8px;
+ background:white;
+ border:1px solid #ddd;
+ text-align:center;
+ page-break-inside:avoid;
+}
+
+.qr-code{
+ margin:10px auto;
+ width:160px;
+ min-height:160px;
+}
+
+@media(max-width:700px){
+
+ .header-inner{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+
+ .clock{
+  text-align:left;
+ }
+
+ .brand h1{
+  font-size:17px;
+ }
+
+ .card{
+  padding:15px;
+ }
+
+}
+
+@media print{
+
+ body{
+  background:white;
+ }
+
+ header,
+ .menu,
+ .no-print{
+  display:none!important;
+ }
+
+ .card{
+  box-shadow:none;
+  border:0;
+ }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header>
+
+<div class="header-inner">
+
+<div class="brand">
+
+<div class="logo">
+
+<!--
+ GANTI URL LOGO SEKOLAH DI SINI
+-->
+<img
+src="https://dummyimage.com/100x100/ffffff/0757a0&text=AH"
+alt="Logo SMPIT Al-Husna">
+
+</div>
+
+<div>
+
+<h1>SMPIT AL-HUSNA</h1>
+
+<p>
+Absensi Digital • Tahun Pelajaran 2026/2027
+</p>
+
+</div>
+
+</div>
+
+<div class="clock">
+
+<div id="clock">
+00:00:00
+</div>
+
+<div id="date">
+-
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<!-- ==================================================
+     LOGIN
+================================================== -->
+
+<div id="loginPage"
+class="container">
+
+<div class="card login">
+
+<h2>🔐 Login Admin</h2>
+
+<p style="text-align:center;color:#667085">
+ABSENSI DIGITAL SMPIT AL-HUSNA
+</p>
+
+<label>Username</label>
+
+<input
+id="username"
+placeholder="Username"
+autocomplete="username">
+
+<label>Password</label>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+autocomplete="current-password">
+
+<button
+style="width:100%"
+onclick="login()">
+
+MASUK
+
+</button>
+
+<div
+id="loginMessage"
+style="margin-top:12px;text-align:center">
+</div>
+
+<p
+style="font-size:12px;color:#667085;text-align:center">
+
+Default:
+<b>admin</b> /
+<b>admin123</b>
+
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+     APPLICATION
+================================================== -->
+
+<div
+id="appPage"
+class="container hidden">
+
+
+<!-- MENU -->
+
+<div class="menu no-print">
+
+<button
+onclick="showSection('dashboard')">
+📊 Dashboard
+</button>
+
+<button
+onclick="showSection('scanner')">
+📷 Scan QR
+</button>
+
+<button
+onclick="showSection('siswa')">
+👨‍🎓 Data Siswa
+</button>
+
+<button
+onclick="showSection('guru')">
+👨‍🏫 Data Guru
+</button>
+
+<button
+onclick="showSection('rekap')">
+📋 Rekap
+</button>
+
+<button
+class="btn-red"
+onclick="logout()">
+🚪 Logout
+</button>
+
+</div>
+
+
+<!-- ==================================================
+     DASHBOARD
+================================================== -->
+
+<section
+id="dashboard"
+class="section active">
+
+<div class="card">
+
+<h2>📊 Dashboard Absensi</h2>
+
+<p id="dashboardDate"></p>
+
+<div class="grid">
+
+<div class="stat">
+<h3>Total Siswa</h3>
+<strong id="totalSiswa">0</strong>
+</div>
+
+<div class="stat">
+<h3>Sudah Hadir</h3>
+<strong id="sudahHadir">0</strong>
+</div>
+
+<div class="stat">
+<h3>Belum Hadir</h3>
+<strong id="belumHadir">0</strong>
+</div>
+
+<div class="stat">
+<h3>Terlambat</h3>
+<strong id="terlambat">0</strong>
+</div>
+
+<div class="stat">
+<h3>Sudah Pulang</h3>
+<strong id="sudahPulang">0</strong>
+</div>
+
+<div class="stat">
+<h3>Guru Hadir</h3>
+<strong id="guruHadir">0</strong>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     SCANNER
+================================================== -->
+
+<section
+id="scanner"
+class="section">
+
+<div class="card scanner">
+
+<h2>📷 Scan QR Absensi</h2>
+
+<p>
+Scan QR siswa atau QR guru.
+</p>
+
+<p style="font-size:13px;color:#667085">
+
+<strong>Siswa:</strong>
+scan pertama = masuk,
+scan kedua = pulang.
+
+<br>
+
+<strong>Guru:</strong>
+tidak dibatasi jam.
+
+<br>
+
+<strong>Batas masuk siswa:</strong>
+07:00.
+
+</p>
+
+
+<div id="reader"></div>
+
+
+<div class="menu">
+
+<button
+onclick="startScanner()"
+class="btn-green">
+
+▶ Mulai Kamera
+
+</button>
+
+<button
+onclick="stopScanner()"
+class="btn-gray">
+
+■ Matikan Kamera
+
+</button>
+
+</div>
+
+
+<div
+id="scanResult"
+class="scan-result">
+
+Belum ada scan.
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     SISWA
+================================================== -->
+
+<section
+id="siswa"
+class="section">
+
+<div class="card">
+
+<h2>👨‍🎓 Data Siswa</h2>
+
+<div class="grid">
+
+<div>
+
+<label>NIS</label>
+
+<input
+id="sNis"
+placeholder="NIS">
+
+</div>
+
+<div>
+
+<label>Nama</label>
+
+<input
+id="sNama"
+placeholder="Nama siswa">
+
+</div>
+
+<div>
+
+<label>Kelas</label>
+
+<input
+id="sKelas"
+placeholder="VII Khalid Bin Walid">
+
+</div>
+
+<div>
+
+<label>Jenis Kelamin</label>
+
+<select id="sJK">
+
+<option value="">
+Pilih
+</option>
+
+<option value="L">
+Laki-laki
+</option>
+
+<option value="P">
+Perempuan
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<label>QR ID</label>
+
+<input
+id="sQr"
+placeholder="Kosongkan untuk otomatis">
+
+
+<button
+onclick="addStudent()">
+
++ Tambah Siswa
+
+</button>
+
+<button
+class="btn-yellow"
+onclick="loadStudents()">
+
+↻ Refresh
+
+</button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>No</th>
+<th>NIS</th>
+<th>Nama</th>
+<th>Kelas</th>
+<th>JK</th>
+<th>QR ID</th>
+<th>Aksi</th>
+</tr>
+
+</thead>
+
+<tbody id="studentTable">
+
+<tr>
+<td colspan="7">
+Memuat...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     GURU
+================================================== -->
+
+<section
+id="guru"
+class="section">
+
+<div class="card">
+
+<h2>👨‍🏫 Data Guru</h2>
+
+<div class="grid">
+
+<div>
+
+<label>NIP</label>
+
+<input
+id="gNip"
+placeholder="NIP">
+
+</div>
+
+<div>
+
+<label>Nama Guru</label>
+
+<input
+id="gNama"
+placeholder="Nama guru">
+
+</div>
+
+<div>
+
+<label>Mata Pelajaran</label>
+
+<input
+id="gMapel"
+placeholder="Mata pelajaran">
+
+</div>
+
+<div>
+
+<label>QR ID</label>
+
+<input
+id="gQr"
+placeholder="Kosongkan untuk otomatis">
+
+</div>
+
+</div>
+
+
+<button
+onclick="addTeacher()">
+
++ Tambah Guru
+
+</button>
+
+<button
+class="btn-yellow"
+onclick="loadTeachers()">
+
+↻ Refresh
+
+</button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>No</th>
+<th>NIP</th>
+<th>Nama</th>
+<th>Mapel</th>
+<th>QR ID</th>
+<th>Aksi</th>
+</tr>
+
+</thead>
+
+<tbody id="teacherTable">
+
+<tr>
+<td colspan="6">
+Memuat...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     REKAP
+================================================== -->
+
+<section
+id="rekap"
+class="section">
+
+<div class="card">
+
+<h2>📋 Rekap Absensi</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Tanggal</label>
+
+<input
+type="date"
+id="rekapTanggal">
+
+</div>
+
+<div>
+
+<label>Kelas</label>
+
+<input
+id="rekapKelas"
+placeholder="Semua kelas">
+
+</div>
+
+<div style="display:flex;align-items:end">
+
+<button
+onclick="loadRecap()">
+
+Tampilkan
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>No</th>
+<th>Jam</th>
+<th>Nama</th>
+<th>Jenis</th>
+<th>Kelas</th>
+<th>Status</th>
+<th>Tipe</th>
+<th>Keterangan</th>
+</tr>
+
+</thead>
+
+<tbody id="recapTable">
+
+<tr>
+<td colspan="8">
+Pilih tanggal.
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     QR PRINT
+================================================== -->
+
+<section
+id="qrPrint"
+class="section">
+
+<div class="card">
+
+<h2>🖨 Cetak QR</h2>
+
+<div
+id="qrContainer">
+</div>
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+ * KONFIGURASI
+ * ===================================================== */
+
+const API_URL =
+'https://script.google.com/macros/s/AKfycbxd3dS-MIAZ1LlWfCtUW1UCoC_DxiH6qrQs3an5dsps2xGKCTr-wku1tzHCexUb_IfbLw/exec';
+
+
+let scanner = null;
+
+let scannerRunning = false;
+
+let lastScan = '';
+
+let lastScanTime = 0;
+
+
+/* =====================================================
+ * CLOCK
+ * ===================================================== */
+
+function updateClock(){
+
+ const now = new Date();
+
+ document.getElementById('clock')
+   .textContent =
+   now.toLocaleTimeString('id-ID');
+
+ document.getElementById('date')
+   .textContent =
+   now.toLocaleDateString(
+     'id-ID',
+     {
+       weekday:'long',
+       year:'numeric',
+       month:'long',
+       day:'numeric'
+     }
+   );
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+
+/* =====================================================
+ * API GET
+ * ===================================================== */
+
+async function api(action, params={}){
+
+ const url =
+   new URL(API_URL);
+
+ url.searchParams.set(
+   'action',
+   action
+ );
+
+ Object.keys(params).forEach(function(key){
+
+   if (
+     params[key] !== undefined &&
+     params[key] !== null
+   ){
+
+     url.searchParams.set(
+       key,
+       params[key]
+     );
+   }
+
+ });
+
+
+ const response =
+   await fetch(
+     url.toString(),
+     {
+       method:'GET',
+       cache:'no-store'
+     }
+   );
+
+
+ if(!response.ok){
+   throw new Error(
+     'Server error ' + response.status
+   );
+ }
+
+
+ return await response.json();
+}
+
+
+/* =====================================================
+ * LOGIN
+ * ===================================================== */
+
+async function login(){
+
+ const username =
+   document.getElementById('username')
+   .value.trim();
+
+ const password =
+   document.getElementById('password')
+   .value.trim();
+
+ const message =
+   document.getElementById('loginMessage');
+
+
+ if(!username || !password){
+
+   message.innerHTML =
+     '<span class="error">Username dan password wajib diisi.</span>';
+
+   return;
+ }
+
+
+ message.textContent =
+   'Memproses login...';
+
+
+ try{
+
+   const result =
+     await api(
+       'login',
+       {
+         username:username,
+         password:password
+       }
+     );
+
+
+   if(!result.success){
+
+     message.innerHTML =
+       '<span class="error">' +
+       result.message +
+       '</span>';
+
+     return;
+   }
+
+
+   sessionStorage.setItem(
+     'absen_login',
+     '1'
+   );
+
+   sessionStorage.setItem(
+     'absen_role',
+     result.role || 'Admin'
+   );
+
+   sessionStorage.setItem(
+     'absen_username',
+     result.username || username
+   );
+
+
+   document.getElementById(
+     'loginPage'
+   ).classList.add('hidden');
+
+
+   document.getElementById(
+     'appPage'
+   ).classList.remove('hidden');
+
+
+   loadDashboard();
+
+ }catch(error){
+
+   message.innerHTML =
+     '<span class="error">' +
+     error.message +
+     '</span>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * AUTO LOGIN
+ * ===================================================== */
+
+function checkLogin(){
+
+ if(
+   sessionStorage.getItem(
+     'absen_login'
+   ) === '1'
+ ){
+
+   document.getElementById(
+     'loginPage'
+   ).classList.add('hidden');
+
+   document.getElementById(
+     'appPage'
+   ).classList.remove('hidden');
+
+   loadDashboard();
+
+ }
+
+}
+
+checkLogin();
+
+
+/* =====================================================
+ * LOGOUT
+ * ===================================================== */
+
+function logout(){
+
+ stopScanner();
+
+ sessionStorage.clear();
+
+ location.reload();
+
+}
+
+
+/* =====================================================
+ * SECTION
+ * ===================================================== */
+
+function showSection(id){
+
+ document.querySelectorAll(
+   '.section'
+ ).forEach(function(section){
+
+   section.classList.remove(
+     'active'
+   );
+
+ });
+
+
+ const section =
+   document.getElementById(id);
+
+ if(section){
+
+   section.classList.add(
+     'active'
+   );
+ }
+
+
+ if(id === 'dashboard'){
+   loadDashboard();
+ }
+
+ if(id === 'siswa'){
+   loadStudents();
+ }
+
+ if(id === 'guru'){
+   loadTeachers();
+ }
+
+ if(id === 'rekap'){
+
+   const date =
+     document.getElementById(
+       'rekapTanggal'
+     );
+
+   if(!date.value){
+
+     date.value =
+       localDate();
+
+   }
+
+   loadRecap();
+ }
+
+}
+
+
+/* =====================================================
+ * DASHBOARD
+ * ===================================================== */
+
+async function loadDashboard(){
+
+ try{
+
+   const result =
+     await api(
+       'dashboard',
+       {
+         tanggal:localDate()
+       }
+     );
+
+
+   if(!result.success){
+
+     throw new Error(
+       result.message
+     );
+   }
+
+
+   document.getElementById(
+     'dashboardDate'
+   ).textContent =
+     'Tanggal: ' +
+     result.tanggal;
+
+
+   document.getElementById(
+     'totalSiswa'
+   ).textContent =
+     result.totalSiswa;
+
+
+   document.getElementById(
+     'sudahHadir'
+   ).textContent =
+     result.sudahHadir;
+
+
+   document.getElementById(
+     'belumHadir'
+   ).textContent =
+     result.belumHadir;
+
+
+   document.getElementById(
+     'terlambat'
+   ).textContent =
+     result.terlambat;
+
+
+   document.getElementById(
+     'sudahPulang'
+   ).textContent =
+     result.sudahPulang;
+
+
+   document.getElementById(
+     'guruHadir'
+   ).textContent =
+     result.guruHadir;
+
+ }catch(error){
+
+   console.error(error);
+
+ }
+
+}
+
+
+/* =====================================================
+ * START SCANNER
+ * ===================================================== */
+
+async function startScanner(){
+
+ if(scannerRunning){
+   return;
+ }
+
+
+ const result =
+   document.getElementById(
+     'scanResult'
+   );
+
+ result.innerHTML =
+   'Mengaktifkan kamera...';
+
+
+ try{
+
+   scanner =
+     new Html5Qrcode(
+       'reader'
+     );
+
+
+   const cameras =
+     await Html5Qrcode
+       .getCameras();
+
+
+   if(
+     !cameras ||
+     cameras.length === 0
+   ){
+
+     throw new Error(
+       'Kamera tidak ditemukan.'
+     );
+   }
+
+
+   let cameraId =
+     cameras[0].id;
+
+
+   // Prioritaskan kamera belakang
+   const back =
+     cameras.find(function(camera){
+
+       const label =
+         String(
+           camera.label || ''
+         ).toLowerCase();
+
+       return (
+         label.includes('back') ||
+         label.includes('rear') ||
+         label.includes('environment')
+       );
+
+     });
+
+
+   if(back){
+     cameraId = back.id;
+   }
+
+
+   await scanner.start(
+     cameraId,
+     {
+       fps:10,
+       qrbox:{
+         width:250,
+         height:250
+       }
+     },
+     onScanSuccess,
+     onScanError
+   );
+
+
+   scannerRunning = true;
+
+   result.innerHTML =
+     '<span class="success">' +
+     'Kamera aktif. Arahkan QR ke kotak scanner.' +
+     '</span>';
+
+
+ }catch(error){
+
+   console.error(error);
+
+   scannerRunning = false;
+
+   result.innerHTML =
+     '<span class="error">' +
+     'Kamera tidak dapat digunakan: ' +
+     error.message +
+     '</span>' +
+
+     '<br><br>' +
+
+     '<small>' +
+     'Pastikan GitHub Pages dibuka menggunakan HTTPS ' +
+     'dan izin kamera browser sudah diberikan.' +
+     '</small>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * STOP SCANNER
+ * ===================================================== */
+
+async function stopScanner(){
+
+ if(
+   scanner &&
+   scannerRunning
+ ){
+
+   try{
+     await scanner.stop();
+   }catch(e){}
+
+   try{
+     await scanner.clear();
+   }catch(e){}
+
+ }
+
+ scannerRunning = false;
+
+}
+
+
+/* =====================================================
+ * QR SUCCESS
+ * ===================================================== */
+
+async function onScanSuccess(decodedText){
+
+ const now =
+   Date.now();
+
+
+ // Anti scan berulang
+ if(
+   decodedText === lastScan &&
+   now - lastScanTime < 3000
+ ){
+
+   return;
+ }
+
+
+ lastScan =
+   decodedText;
+
+ lastScanTime =
+   now;
+
+
+ const result =
+   document.getElementById(
+     'scanResult'
+   );
+
+
+ result.innerHTML =
+   '<b>Memproses QR...</b><br>' +
+   decodedText;
+
+
+ try{
+
+   const data =
+     await api(
+       'scan',
+       {
+         qr:decodedText
+       }
+     );
+
+
+   showScanResult(data);
+
+
+   loadDashboard();
+
+
+ }catch(error){
+
+   result.innerHTML =
+     '<span class="error">' +
+     error.message +
+     '</span>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * QR ERROR
+ * ===================================================== */
+
+function onScanError(error){
+
+ // Sengaja tidak menampilkan setiap frame
+}
+
+
+/* =====================================================
+ * SHOW SCAN RESULT
+ * ===================================================== */
+
+function showScanResult(data){
+
+ const result =
+   document.getElementById(
+     'scanResult'
+   );
+
+
+ if(!data){
+
+   result.innerHTML =
+     '<span class="error">Tidak ada respons server.</span>';
+
+   return;
+ }
+
+
+ if(!data.success){
+
+   result.innerHTML =
+     '<span class="error">' +
+     escapeHtml(
+       data.message || 'Gagal'
+     ) +
+     '</span>';
+
+   return;
+ }
+
+
+ let html =
+   '<div class="scan-name">' +
+   escapeHtml(data.nama || '-') +
+   '</div>';
+
+
+ if(data.kelas){
+
+   html +=
+     '<div>' +
+     escapeHtml(data.kelas) +
+     '</div>';
+
+ }
+
+
+ if(data.nis){
+
+   html +=
+     '<div>NIS: ' +
+     escapeHtml(data.nis) +
+     '</div>';
+
+ }
+
+
+ if(data.nip){
+
+   html +=
+     '<div>NIP: ' +
+     escapeHtml(data.nip) +
+     '</div>';
+
+ }
+
+
+ html +=
+   '<br>' +
+   '<b>' +
+   escapeHtml(
+     data.mode ||
+     data.status ||
+     ''
+   ) +
+   '</b>' +
+   '<br>' +
+   escapeHtml(
+     data.message || ''
+   ) +
+   '<br>' +
+   '<small>' +
+   escapeHtml(
+     data.tanggal || ''
+   ) +
+   ' • ' +
+   escapeHtml(
+     data.jam || ''
+   ) +
+   '</small>';
+
+
+ if(
+   data.status === 'TERLAMBAT'
+ ){
+
+   html +=
+     '<br><span class="badge late">' +
+     'TERLAMBAT' +
+     '</span>';
+
+ }else{
+
+   html +=
+     '<br><span class="badge ok">' +
+     escapeHtml(
+       data.status || 'BERHASIL'
+     ) +
+     '</span>';
+
+ }
+
+
+ result.innerHTML =
+   html;
+
+}
+
+
+/* =====================================================
+ * STUDENTS
+ * ===================================================== */
+
+async function loadStudents(){
+
+ const tbody =
+   document.getElementById(
+     'studentTable'
+   );
+
+
+ tbody.innerHTML =
+   '<tr><td colspan="7">Memuat...</td></tr>';
+
+
+ try{
+
+   const result =
+     await api('siswa');
+
+
+   if(!result.success){
+
+     throw new Error(
+       result.message
+     );
+   }
+
+
+   const data =
+     result.data || [];
+
+
+   if(data.length === 0){
+
+     tbody.innerHTML =
+       '<tr><td colspan="7">Belum ada data siswa.</td></tr>';
+
+     return;
+   }
+
+
+   tbody.innerHTML =
+     data.map(function(siswa,index){
+
+       return `
+       <tr>
+
+       <td>${index+1}</td>
+
+       <td>${escapeHtml(siswa.nis)}</td>
+
+       <td>${escapeHtml(siswa.nama)}</td>
+
+       <td>${escapeHtml(siswa.kelas)}</td>
+
+       <td>${escapeHtml(siswa.jk)}</td>
+
+       <td>
+       <span class="badge">
+       ${escapeHtml(siswa.qr_id)}
+       </span>
+       </td>
+
+       <td>
+
+       <button
+       class="btn-yellow"
+       onclick="printOneQr(
+       '${escapeJs(siswa.nama)}',
+       '${escapeJs(siswa.qr_id)}'
+       )">
+
+       QR
+
+       </button>
+
+       <button
+       class="btn-red"
+       onclick="deleteStudent(
+       '${escapeJs(siswa.qr_id)}'
+       )">
+
+       Hapus
+
+       </button>
+
+       </td>
+
+       </tr>
+       `;
+
+     }).join('');
+
+ }catch(error){
+
+   tbody.innerHTML =
+     '<tr><td colspan="7">' +
+     escapeHtml(error.message) +
+     '</td></tr>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * ADD STUDENT
+ * ===================================================== */
+
+async function addStudent(){
+
+ const nis =
+   document.getElementById(
+     'sNis'
+   ).value.trim();
+
+ const nama =
+   document.getElementById(
+     'sNama'
+   ).value.trim();
+
+ const kelas =
+   document.getElementById(
+     'sKelas'
+   ).value.trim();
+
+ const jk =
+   document.getElementById(
+     'sJK'
+   ).value;
+
+ const qr =
+   document.getElementById(
+     'sQr'
+   ).value.trim();
+
+
+ if(!nis || !nama || !kelas){
+
+   alert(
+     'NIS, nama dan kelas wajib diisi.'
+   );
+
+   return;
+ }
+
+
+ try{
+
+   const result =
+     await api(
+       'tambahSiswa',
+       {
+         nis:nis,
+         nama:nama,
+         kelas:kelas,
+         jk:jk,
+         qr_id:qr
+       }
+     );
+
+
+   alert(result.message);
+
+
+   if(result.success){
+
+     document.getElementById(
+       'sNis'
+     ).value = '';
+
+     document.getElementById(
+       'sNama'
+     ).value = '';
+
+     document.getElementById(
+       'sKelas'
+     ).value = '';
+
+     document.getElementById(
+       'sJK'
+     ).value = '';
+
+     document.getElementById(
+       'sQr'
+     ).value = '';
+
+     loadStudents();
+   }
+
+
+ }catch(error){
+
+   alert(
+     'Error: ' +
+     error.message
+   );
+
+ }
+
+}
+
+
+/* =====================================================
+ * DELETE STUDENT
+ * ===================================================== */
+
+async function deleteStudent(qr){
+
+ if(
+   !confirm(
+     'Hapus data siswa ini?'
+   )
+ ){
+   return;
+ }
+
+
+ try{
+
+   const result =
+     await api(
+       'hapusSiswa',
+       {
+         qr_id:qr
+       }
+     );
+
+
+   alert(result.message);
+
+   loadStudents();
+
+ }catch(error){
+
+   alert(error.message);
+
+ }
+
+}
+
+
+/* =====================================================
+ * TEACHERS
+ * ===================================================== */
+
+async function loadTeachers(){
+
+ const tbody =
+   document.getElementById(
+     'teacherTable'
+   );
+
+
+ tbody.innerHTML =
+   '<tr><td colspan="6">Memuat...</td></tr>';
+
+
+ try{
+
+   const result =
+     await api('guru');
+
+
+   if(!result.success){
+
+     throw new Error(
+       result.message
+     );
+   }
+
+
+   const data =
+     result.data || [];
+
+
+   if(data.length === 0){
+
+     tbody.innerHTML =
+       '<tr><td colspan="6">Belum ada data guru.</td></tr>';
+
+     return;
+   }
+
+
+   tbody.innerHTML =
+     data.map(function(guru,index){
+
+       return `
+       <tr>
+
+       <td>${index+1}</td>
+
+       <td>${escapeHtml(guru.nip)}</td>
+
+       <td>${escapeHtml(guru.nama)}</td>
+
+       <td>${escapeHtml(guru.mapel)}</td>
+
+       <td>
+       <span class="badge">
+       ${escapeHtml(guru.qr_id)}
+       </span>
+       </td>
+
+       <td>
+
+       <button
+       class="btn-yellow"
+       onclick="printOneQr(
+       '${escapeJs(guru.nama)}',
+       '${escapeJs(guru.qr_id)}'
+       )">
+
+       QR
+
+       </button>
+
+       <button
+       class="btn-red"
+       onclick="deleteTeacher(
+       '${escapeJs(guru.qr_id)}'
+       )">
+
+       Hapus
+
+       </button>
+
+       </td>
+
+       </tr>
+       `;
+
+     }).join('');
+
+ }catch(error){
+
+   tbody.innerHTML =
+     '<tr><td colspan="6">' +
+     escapeHtml(error.message) +
+     '</td></tr>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * ADD TEACHER
+ * ===================================================== */
+
+async function addTeacher(){
+
+ const nip =
+   document.getElementById(
+     'gNip'
+   ).value.trim();
+
+ const nama =
+   document.getElementById(
+     'gNama'
+   ).value.trim();
+
+ const mapel =
+   document.getElementById(
+     'gMapel'
+   ).value.trim();
+
+ const qr =
+   document.getElementById(
+     'gQr'
+   ).value.trim();
+
+
+ if(!nama){
+
+   alert(
+     'Nama guru wajib diisi.'
+   );
+
+   return;
+ }
+
+
+ try{
+
+   const result =
+     await api(
+       'tambahGuru',
+       {
+         nip:nip,
+         nama:nama,
+         mapel:mapel,
+         qr_id:qr
+       }
+     );
+
+
+   alert(result.message);
+
+
+   if(result.success){
+
+     document.getElementById(
+       'gNip'
+     ).value = '';
+
+     document.getElementById(
+       'gNama'
+     ).value = '';
+
+     document.getElementById(
+       'gMapel'
+     ).value = '';
+
+     document.getElementById(
+       'gQr'
+     ).value = '';
+
+     loadTeachers();
+   }
+
+
+ }catch(error){
+
+   alert(
+     'Error: ' +
+     error.message
+   );
+
+ }
+
+}
+
+
+/* =====================================================
+ * DELETE TEACHER
+ * ===================================================== */
+
+async function deleteTeacher(qr){
+
+ if(
+   !confirm(
+     'Hapus data guru ini?'
+   )
+ ){
+   return;
+ }
+
+
+ try{
+
+   const result =
+     await api(
+       'hapusGuru',
+       {
+         qr_id:qr
+       }
+     );
+
+
+   alert(result.message);
+
+   loadTeachers();
+
+ }catch(error){
+
+   alert(error.message);
+
+ }
+
+}
+
+
+/* =====================================================
+ * RECAP
+ * ===================================================== */
+
+async function loadRecap(){
+
+ const tanggal =
+   document.getElementById(
+     'rekapTanggal'
+   ).value ||
+   localDate();
+
+
+ const kelas =
+   document.getElementById(
+     'rekapKelas'
+   ).value.trim();
+
+
+ const tbody =
+   document.getElementById(
+     'recapTable'
+   );
+
+
+ tbody.innerHTML =
+   '<tr><td colspan="8">Memuat...</td></tr>';
+
+
+ try{
+
+   const result =
+     await api(
+       'rekap',
+       {
+         tanggal:tanggal,
+         kelas:kelas
+       }
+     );
+
+
+   if(!result.success){
+
+     throw new Error(
+       result.message
+     );
+   }
+
+
+   const data =
+     result.data || [];
+
+
+   if(data.length === 0){
+
+     tbody.innerHTML =
+       '<tr><td colspan="8">Tidak ada data.</td></tr>';
+
+     return;
+   }
+
+
+   tbody.innerHTML =
+     data.map(function(row,index){
+
+       let badge =
+         'badge';
+
+
+       if(
+         String(row.status)
+           .toUpperCase()
+           .includes('TERLAMBAT')
+       ){
+
+         badge +=
+           ' late';
+
+       }else if(
+         String(row.tipe)
+           .toUpperCase() ===
+         'PULANG'
+       ){
+
+         badge +=
+           ' pulang';
+
+       }else{
+
+         badge +=
+           ' ok';
+
+       }
+
+
+       return `
+       <tr>
+
+       <td>${index+1}</td>
+
+       <td>${escapeHtml(row.jam)}</td>
+
+       <td>${escapeHtml(row.nama)}</td>
+
+       <td>${escapeHtml(row.jenis)}</td>
+
+       <td>${escapeHtml(row.kelas)}</td>
+
+       <td>
+       <span class="${badge}">
+       ${escapeHtml(row.status)}
+       </span>
+       </td>
+
+       <td>${escapeHtml(row.tipe)}</td>
+
+       <td>${escapeHtml(row.keterangan)}</td>
+
+       </tr>
+       `;
+
+     }).join('');
+
+
+ }catch(error){
+
+   tbody.innerHTML =
+     '<tr><td colspan="8">' +
+     escapeHtml(error.message) +
+     '</td></tr>';
+
+ }
+
+}
+
+
+/* =====================================================
+ * PRINT ONE QR
+ * ===================================================== */
+
+function printOneQr(
+  nama,
+  qr
+){
+
+ const container =
+   document.getElementById(
+     'qrContainer'
+   );
+
+
+ container.innerHTML = '';
+
+
+ const card =
+   document.createElement(
+     'div'
+   );
+
+ card.className =
+   'qr-card';
+
+
+ const title =
+   document.createElement(
+     'h3'
+   );
+
+ title.textContent =
+   nama;
+
+
+ const code =
+   document.createElement(
+     'div'
+   );
+
+ code.className =
+   'qr-code';
+
+
+ const id =
+   document.createElement(
+     'div'
+   );
+
+ id.textContent =
+   qr;
+
+
+ card.appendChild(title);
+
+ card.appendChild(code);
+
+ card.appendChild(id);
+
+ container.appendChild(card);
+
+
+ new QRCode(
+   code,
+   {
+     text:qr,
+     width:160,
+     height:160,
+     correctLevel:
+       QRCode.CorrectLevel.H
+   }
+ );
+
+
+ showSection('qrPrint');
+
+
+ setTimeout(
+   function(){
+     window.print();
+   },
+   500
+ );
+
+}
+
+
+/* =====================================================
+ * UTILITIES
+ * ===================================================== */
+
+function localDate(){
+
+ const d =
+   new Date();
+
+
+ const y =
+   d.getFullYear();
+
+
+ const m =
+   String(
+     d.getMonth()+1
+   ).padStart(2,'0');
+
+
+ const day =
+   String(
+     d.getDate()
+   ).padStart(2,'0');
+
+
+ return (
+   y + '-' +
+   m + '-' +
+   day
+ );
+
+}
+
+
+function escapeHtml(value){
+
+ return String(
+   value == null ? '' : value
+ )
+ .replace(/&/g,'&amp;')
+ .replace(/</g,'&lt;')
+ .replace(/>/g,'&gt;')
+ .replace(/"/g,'&quot;')
+ .replace(/'/g,'&#039;');
+
+}
+
+
+function escapeJs(value){
+
+ return String(
+   value == null ? '' : value
+ )
+ .replace(/\\/g,'\\\\')
+ .replace(/'/g,"\\'")
+ .replace(/\r/g,' ')
+ .replace(/\n/g,' ');
+
+}
+
+
+/* =====================================================
+ * INITIAL DATE
+ * ===================================================== */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function(){
+
+    const date =
+      document.getElementById(
+        'rekapTanggal'
+      );
+
+    if(date){
+      date.value =
+        localDate();
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
