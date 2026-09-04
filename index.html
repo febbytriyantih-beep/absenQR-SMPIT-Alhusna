@@ -2030,10 +2030,6 @@ No
 </th>
 
 <th>
-Jam
-</th>
-
-<th>
 Nama
 </th>
 
@@ -2046,15 +2042,19 @@ Kelas
 </th>
 
 <th>
-Status
+Jam Masuk
 </th>
 
 <th>
-Tipe
+Keterangan Masuk
 </th>
 
 <th>
-Keterangan
+Jam Pulang
+</th>
+
+<th>
+Keterangan Pulang
 </th>
 
 </tr>
@@ -2954,267 +2954,36 @@ function onScanError(
    SHOW SCAN RESULT
 ===================================================== */
 
-function showScanResult(
-    data
-){
+function showScanResult(data){
+    const resultBox = document.getElementById('scanResult');
+    if(!data){ resultBox.innerHTML='<div class="scan-error">Server tidak memberikan respons.</div>'; return; }
+    if(!data.success){ resultBox.innerHTML='<div class="scan-error">❌ '+escapeHtml(data.message || 'Absensi gagal.')+'</div>'; return; }
 
-    const resultBox =
-        document.getElementById(
-            'scanResult'
-        );
+    let title = data.mode === 'PULANG' ? 'Absensi Berhasil (PULANG)' :
+                data.mode === 'MASUK' ? 'Absensi Berhasil (MASUK)' :
+                data.type === 'GURU' ? 'Absensi Guru Berhasil' : 'Absensi Berhasil';
+    const late = String(data.status || '').toUpperCase() === 'TERLAMBAT';
+    const statusClass = late ? 'scan-warning' : 'scan-success';
 
+    let html = `<div class="${statusClass}" style="font-size:18px;margin-bottom:15px">✓ ${escapeHtml(title)}</div>
+                <div class="scan-name">${escapeHtml(data.nama || '-')}</div>`;
+    if(data.nis) html += `<div class="scan-detail">NIS: <strong>${escapeHtml(data.nis)}</strong></div>`;
+    if(data.nip) html += `<div class="scan-detail">NIP: <strong>${escapeHtml(data.nip)}</strong></div>`;
+    if(data.kelas) html += `<div class="scan-detail">Kelas: <strong>${escapeHtml(data.kelas)}</strong></div>`;
 
-    if(!data){
+    html += `<hr style="border:0;border-top:1px solid #e5e7eb;margin:15px 0">`;
 
-        resultBox.innerHTML =
-            '<div class="scan-error">' +
-            'Server tidak memberikan respons.' +
-            '</div>';
-
-        return;
-
+    if(data.mode === 'PULANG' || data.jamPulang){
+        html += `<div class="scan-detail">🕐 Jam Pulang: <strong>${escapeHtml(data.jamPulang || data.jam || '-')}</strong><br>📝 Keterangan Pulang: <strong>${escapeHtml(data.keteranganPulang || 'Absensi pulang')}</strong></div>`;
+        if(data.jamMasuk) html += `<div class="scan-detail" style="margin-top:8px">🕐 Jam Masuk: <strong>${escapeHtml(data.jamMasuk)}</strong><br>📝 Keterangan Masuk: <strong>${escapeHtml(data.keteranganMasuk || '-')}</strong></div>`;
+    } else {
+        html += `<div class="scan-detail">🕐 Jam Masuk: <strong>${escapeHtml(data.jamMasuk || data.jam || '-')}</strong><br>📝 Keterangan Masuk: <strong>${escapeHtml(data.keteranganMasuk || (late ? 'Masuk setelah 07:00' : 'Masuk tepat waktu'))}</strong></div>`;
     }
 
-
-    if(
-        !data.success
-    ){
-
-        resultBox.innerHTML =
-            '<div class="scan-error">' +
-            '❌ ' +
-            escapeHtml(
-                data.message ||
-                'Absensi gagal.'
-            ) +
-            '</div>';
-
-        return;
-
-    }
-
-
-    let title =
-        'Absensi Berhasil';
-
-
-    if(
-        data.mode === 'MASUK'
-    ){
-
-        title =
-            'Absensi Berhasil (MASUK)';
-
-    }
-
-
-    if(
-        data.mode === 'PULANG'
-    ){
-
-        title =
-            'Absensi Berhasil (PULANG)';
-
-    }
-
-
-    if(
-        data.type === 'GURU'
-    ){
-
-        title =
-            'Absensi Guru Berhasil';
-
-    }
-
-
-    let statusClass =
-        'scan-success';
-
-
-    if(
-        String(
-            data.status || ''
-        ).toUpperCase()
-        ===
-        'TERLAMBAT'
-    ){
-
-        statusClass =
-            'scan-warning';
-
-    }
-
-
-    let html = `
-
-        <div
-        class="${statusClass}"
-        style="
-        font-size:18px;
-        margin-bottom:15px;
-        ">
-
-        ✓ ${escapeHtml(title)}
-
-        </div>
-
-
-        <div class="scan-name">
-
-        ${escapeHtml(
-            data.nama || '-'
-        )}
-
-        </div>
-
-    `;
-
-
-    if(data.nis){
-
-        html += `
-
-        <div class="scan-detail">
-
-        NIS:
-        <strong>
-        ${escapeHtml(data.nis)}
-        </strong>
-
-        </div>
-
-        `;
-
-    }
-
-
-    if(data.nip){
-
-        html += `
-
-        <div class="scan-detail">
-
-        NIP:
-        <strong>
-        ${escapeHtml(data.nip)}
-        </strong>
-
-        </div>
-
-        `;
-
-    }
-
-
-    if(data.kelas){
-
-        html += `
-
-        <div class="scan-detail">
-
-        Kelas:
-        <strong>
-        ${escapeHtml(data.kelas)}
-        </strong>
-
-        </div>
-
-        `;
-
-    }
-
-
-    html += `
-
-        <hr
-        style="
-        border:0;
-        border-top:
-        1px solid #e5e7eb;
-        margin:15px 0;
-        ">
-
-
-        <div class="scan-detail">
-
-        🕐 Jam:
-        <strong>
-        ${escapeHtml(data.jam || '-')}
-        </strong>
-
-        <br>
-
-        📅 Tanggal:
-        <strong>
-        ${escapeHtml(
-            formatDate(
-                data.tanggal || ''
-            )
-        )}
-        </strong>
-
-        </div>
-
-    `;
-
-
-    if(
-        data.status
-    ){
-
-        html += `
-
-        <div style="margin-top:12px">
-
-        <span
-        class="
-        badge
-        ${
-            String(data.status)
-            .toUpperCase()
-            .includes('TERLAMBAT')
-            ?
-            'badge-late'
-            :
-            'badge-ok'
-        }
-        ">
-
-        ${escapeHtml(
-            data.status
-        )}
-
-        </span>
-
-        </div>
-
-        `;
-
-    }
-
-
-    html += `
-
-        <div
-        style="
-        margin-top:14px;
-        color:#667085;
-        font-size:13px;
-        ">
-
-        ${escapeHtml(
-            data.message || ''
-        )}
-
-        </div>
-
-    `;
-
-
-    resultBox.innerHTML =
-        html;
-
+    html += `<div class="scan-detail" style="margin-top:8px">📅 Tanggal: <strong>${escapeHtml(formatDate(data.tanggal || ''))}</strong></div>`;
+    if(data.status) html += `<div style="margin-top:12px"><span class="badge ${late ? 'badge-late' : 'badge-ok'}">${escapeHtml(data.status)}</span></div>`;
+    html += `<div style="margin-top:14px;color:#667085;font-size:13px">${escapeHtml(data.message || '')}</div>`;
+    resultBox.innerHTML = html;
 }
 
 
@@ -3851,203 +3620,41 @@ async function deleteTeacher(
 ===================================================== */
 
 async function loadRecap(){
+    const tanggal = document.getElementById('rekapTanggal').value || localDate();
+    const kelas = document.getElementById('rekapKelas').value.trim();
+    const tbody = document.getElementById('recapTable');
 
-    const tanggal =
-        document.getElementById(
-            'rekapTanggal'
-        ).value ||
-        localDate();
-
-
-    const kelas =
-        document.getElementById(
-            'rekapKelas'
-        ).value.trim();
-
-
-    const tbody =
-        document.getElementById(
-            'recapTable'
-        );
-
-
-    tbody.innerHTML =
-        '<tr>' +
-        '<td colspan="8" style="text-align:center">' +
-        '⏳ Memuat...' +
-        '</td>' +
-        '</tr>';
-
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">⏳ Memuat...</td></tr>';
 
     try{
+        const result = await api('rekap',{tanggal: tanggal,kelas: kelas});
+        if(!result.success) throw new Error(result.message);
+        const data = result.data || [];
 
-        const result =
-            await api(
-                'rekap',
-                {
-                    tanggal:tanggal,
-                    kelas:kelas
-                }
-            );
-
-
-        if(
-            !result.success
-        ){
-
-            throw new Error(
-                result.message
-            );
-
-        }
-
-
-        const data =
-            result.data || [];
-
-
-        if(
-            data.length === 0
-        ){
-
-            tbody.innerHTML =
-                '<tr>' +
-                '<td colspan="8" style="text-align:center">' +
-                'Tidak ada data absensi.' +
-                '</td>' +
-                '</tr>';
-
+        if(data.length === 0){
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Tidak ada data absensi.</td></tr>';
             return;
-
         }
 
-
-        tbody.innerHTML =
-            data.map(
-                function(
-                    row,
-                    index
-                ){
-
-                    let badge =
-                        'badge ';
-
-
-                    if(
-                        String(
-                            row.status
-                        )
-                        .toUpperCase()
-                        .includes(
-                            'TERLAMBAT'
-                        )
-                    ){
-
-                        badge +=
-                            'badge-late';
-
-                    }
-                    else if(
-                        String(
-                            row.tipe
-                        )
-                        .toUpperCase()
-                        ===
-                        'PULANG'
-                    ){
-
-                        badge +=
-                            'badge-pulang';
-
-                    }
-                    else{
-
-                        badge +=
-                            'badge-ok';
-
-                    }
-
-
-                    return `
-
-                    <tr>
-
-                    <td>
-                    ${index + 1}
-                    </td>
-
-                    <td>
-                    ${escapeHtml(
-                        row.jam
-                    )}
-                    </td>
-
-                    <td>
-                    <strong>
-                    ${escapeHtml(
-                        row.nama
-                    )}
-                    </strong>
-                    </td>
-
-                    <td>
-                    ${escapeHtml(
-                        row.jenis
-                    )}
-                    </td>
-
-                    <td>
-                    ${escapeHtml(
-                        row.kelas
-                    )}
-                    </td>
-
-                    <td>
-
-                    <span
-                    class="${badge}">
-
-                    ${escapeHtml(
-                        row.status
-                    )}
-
-                    </span>
-
-                    </td>
-
-                    <td>
-                    ${escapeHtml(
-                        row.tipe
-                    )}
-                    </td>
-
-                    <td>
-                    ${escapeHtml(
-                        row.keterangan
-                    )}
-                    </td>
-
-                    </tr>
-
-                    `;
-
-                }
-            ).join('');
-
-
+        tbody.innerHTML = data.map(function(row,index){
+            const masukLate = String(row.statusMasuk || '').toUpperCase().includes('TERLAMBAT');
+            const masukBadge = 'badge ' + (masukLate ? 'badge-late' : 'badge-ok');
+            const pulangBadge = row.jamPulang ? 'badge badge-pulang' : 'badge';
+            return `
+            <tr>
+                <td>${index + 1}</td>
+                <td><strong>${escapeHtml(row.nama || '')}</strong></td>
+                <td>${escapeHtml(row.jenis || '')}</td>
+                <td>${escapeHtml(row.kelas || '')}</td>
+                <td><strong>${escapeHtml(row.jamMasuk || '-')}</strong></td>
+                <td><span class="${masukBadge}">${escapeHtml(row.keteranganMasuk || row.statusMasuk || '-')}</span></td>
+                <td><strong>${escapeHtml(row.jamPulang || '-')}</strong></td>
+                <td><span class="${pulangBadge}">${escapeHtml(row.keteranganPulang || '-')}</span></td>
+            </tr>`;
+        }).join('');
     }catch(error){
-
-        tbody.innerHTML =
-            '<tr>' +
-            '<td colspan="8" style="text-align:center;color:#c62828">' +
-            escapeHtml(
-                error.message
-            ) +
-            '</td>' +
-            '</tr>';
-
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#c62828">' + escapeHtml(error.message) + '</td></tr>';
     }
-
 }
 
 
