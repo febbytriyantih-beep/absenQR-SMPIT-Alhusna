@@ -1610,47 +1610,55 @@ function playScanSound(){
       audioContext.resume();
     }
 
-    const oscillator =
-      audioContext.createOscillator();
+    const now = audioContext.currentTime;
 
-    const gain =
-      audioContext.createGain();
+    // Master volume diperkuat agar bunyi scan lebih mudah terdengar.
+    const master = audioContext.createGain();
+    master.gain.setValueAtTime(0.85, now);
+    master.connect(audioContext.destination);
 
-    oscillator.type = 'sine';
+    // BEEP 1
+    const osc1 = audioContext.createOscillator();
+    const gain1 = audioContext.createGain();
 
-    oscillator.frequency.setValueAtTime(
-      880,
-      audioContext.currentTime
-    );
+    osc1.type = 'square';
+    osc1.frequency.setValueAtTime(1000, now);
 
-    oscillator.frequency.exponentialRampToValueAtTime(
-      1320,
-      audioContext.currentTime + 0.08
-    );
+    gain1.gain.setValueAtTime(0.0001, now);
+    gain1.gain.exponentialRampToValueAtTime(0.65, now + 0.015);
+    gain1.gain.setValueAtTime(0.65, now + 0.12);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.20);
 
-    gain.gain.setValueAtTime(
-      0.0001,
-      audioContext.currentTime
-    );
+    osc1.connect(gain1);
+    gain1.connect(master);
 
-    gain.gain.exponentialRampToValueAtTime(
-      0.25,
-      audioContext.currentTime + 0.01
-    );
+    osc1.start(now);
+    osc1.stop(now + 0.21);
 
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      audioContext.currentTime + 0.18
-    );
+    // BEEP 2 - sedikit lebih tinggi agar terdengar jelas sebagai tanda berhasil.
+    const osc2 = audioContext.createOscillator();
+    const gain2 = audioContext.createGain();
 
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+    osc2.type = 'square';
+    osc2.frequency.setValueAtTime(1450, now + 0.23);
 
-    oscillator.start();
+    gain2.gain.setValueAtTime(0.0001, now + 0.23);
+    gain2.gain.exponentialRampToValueAtTime(0.70, now + 0.245);
+    gain2.gain.setValueAtTime(0.70, now + 0.37);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.47);
 
-    oscillator.stop(
-      audioContext.currentTime + 0.18
-    );
+    osc2.connect(gain2);
+    gain2.connect(master);
+
+    osc2.start(now + 0.23);
+    osc2.stop(now + 0.48);
+
+    // Lepaskan node audio setelah suara selesai.
+    setTimeout(()=>{
+      try{
+        master.disconnect();
+      }catch(e){}
+    },700);
 
   }catch(e){
 
